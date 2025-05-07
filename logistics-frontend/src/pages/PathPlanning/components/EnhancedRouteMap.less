@@ -1,0 +1,204 @@
+.routeMapCard {
+  margin-bottom: 16px;
+}
+
+.mapContainer {
+  height: 500px !important;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.orderSelector {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 8px 12px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+.orderSelectorLabel {
+  font-weight: 500;
+  margin-right: 12px;
+  min-width: 80px;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.orderSelectorDropdown {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: white;
+  cursor: pointer;
+}
+
+.orderSelectorDropdown:hover {
+  border-color: #40a9ff;
+}
+
+.orderSelectorDropdown:focus {
+  outline: none;
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.singleOrderMapContainer {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.mapToolbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 8px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+}
+
+.routeSelector {
+  margin-bottom: 16px;
+}
+
+.routeOption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.routeDistance {
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 12px;
+}
+
+.noData {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.compareContainer {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 16px;
+  margin-top: 16px;
+}
+
+.miniMapContainer {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #f0f0f0;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.miniMapHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.routeInfo {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.miniMap {
+  height: 250px;
+  background-color: #f5f5f5;
+}
+
+.singleMapContainer {
+  display: flex;
+  flex-direction: column;
+  margin-top: 16px;
+}
+
+.mainMap {
+  height: 400px;
+  background-color: #f5f5f5;
+  margin-bottom: 16px;
+}
+
+.routeDetails {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  padding: 12px;
+  background-color: #fafafa;
+  border-radius: 2px;
+}
+
+.detailItem {
+  width: 50%;
+  margin-bottom: 8px;
+  display: flex;
+}
+
+.detailLabel {
+  font-weight: 500;
+  margin-right: 8px;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.detailValue {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+// New horizontal layout styles
+.horizontalLayoutContainer {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.mapSection {
+  flex: 1;
+  min-width: 500px;
+}
+
+.tablesSection {
+  flex: 1;
+  min-width: 400px;
+  max-width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  max-height: 800px;
+}
+
+.resultsTable,
+.detailsTable {
+  width: 100%;
+  margin-bottom: 0;
+}
+
+// Responsive layout for smaller screens
+@media (max-width: 1200px) {
+  .horizontalLayoutContainer {
+    flex-direction: column;
+  }
+  
+  .mapSection,
+  .tablesSection {
+    max-width: 100%;
+    width: 100%;
+  }
+  
+  .tablesSection {
+    max-height: none;
+    overflow-y: visible;
+  }
+} 

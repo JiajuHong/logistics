@@ -1,0 +1,57 @@
+.userCenterContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0;
+}
+
+.avatarContainer {
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar {
+  margin-bottom: 15px;
+}
+
+.userForm {
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 20px;
+}
+
+.userInfo {
+  width: 100%;
+  max-width: 400px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #f0f0f0;
+}
+
+@media screen and (min-width: 768px) {
+  .userCenterContainer {
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .avatarContainer {
+    margin-right: 40px;
+    margin-bottom: 0;
+  }
+  
+  .userForm {
+    flex: 1;
+    min-width: 300px;
+    max-width: 500px;
+  }
+  
+  .userInfo {
+    width: 100%;
+    max-width: 100%;
+    margin-top: 30px;
+  }
+} 

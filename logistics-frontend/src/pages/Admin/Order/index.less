@@ -1,0 +1,102 @@
+.container {
+  padding: 24px;
+  background-color: #f0f2f5;
+  min-height: 100%;
+
+  .statisticCard {
+    margin-bottom: 24px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07);
+    border-radius: 8px;
+    
+    :global {
+      .ant-card-body {
+        padding: 16px;
+      }
+    }
+    
+    .statItem {
+      background-color: #fafafa;
+      border-radius: 8px;
+      transition: all 0.3s;
+      height: 100%;
+      
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+      }
+      
+      .progressWrapper, .orderTotal {
+        margin-top: 16px;
+        text-align: center;
+      }
+      
+      :global {
+        .ant-card-body {
+          padding: 16px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
+        
+        .ant-statistic-title {
+          font-size: 16px;
+          margin-bottom: 12px;
+        }
+        
+        .ant-statistic-content {
+          display: flex;
+          align-items: baseline;
+        }
+      }
+    }
+  }
+
+  .toolbar {
+    padding: 16px;
+    background-color: #fff;
+    margin-bottom: 16px;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07);
+  }
+
+  .filterCard {
+    margin-bottom: 16px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07);
+    
+    :global {
+      .ant-form-item {
+        margin-bottom: 16px;
+      }
+      
+      .ant-card-body {
+        padding: 16px 24px;
+      }
+    }
+  }
+
+  .cardView {
+    min-height: 500px;
+    position: relative;
+    margin-bottom: 24px;
+
+    .loadingContainer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 300px;
+    }
+
+    .pagination {
+      margin-top: 16px;
+      text-align: right;
+    }
+  }
+
+  .tableView {
+    background: #fff;
+    padding: 24px;
+    border-radius: 2px;
+  }
+} 

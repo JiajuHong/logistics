@@ -1,0 +1,193 @@
+-- 为核心表结构生成测试数据，保持与init_supplementary_data.sql中的数据一致性
+
+-- 假设系统中已有10个站点，ID从1-10，现在添加站点之间的路线数据
+-- 创建路线数据(与station_distance_cache表对应)
+INSERT INTO route 
+(from_station_id, to_station_id, distance, travel_time, status, create_time)
+VALUES
+-- 站点1与其他站点的路线
+(1, 2, 150.25, 2.0, 1, NOW()),
+(1, 3, 320.75, 3.3, 1, NOW()),
+(1, 4, 480.50, 6.0, 1, NOW()),
+(1, 5, 210.30, 2.5, 1, NOW()),
+(1, 6, 560.70, 7.0, 1, NOW()),
+(1, 7, 720.40, 8.0, 1, NOW()),
+(1, 8, 830.60, 9.0, 1, NOW()),
+(1, 9, 420.90, 5.0, 1, NOW()),
+(1, 10, 950.20, 10.0, 1, NOW()),
+
+-- 站点2与其他站点的路线
+(2, 1, 150.25, 2.0, 1, NOW()),
+(2, 3, 180.45, 2.3, 1, NOW()),
+(2, 4, 330.75, 4.0, 1, NOW()),
+(2, 5, 240.60, 3.0, 1, NOW()),
+(2, 6, 410.30, 5.0, 1, NOW()),
+(2, 7, 570.80, 7.0, 1, NOW()),
+(2, 8, 680.40, 8.0, 1, NOW()),
+(2, 9, 290.50, 3.5, 1, NOW()),
+(2, 10, 800.10, 9.0, 1, NOW()),
+
+-- 站点3与其他站点的路线
+(3, 1, 320.75, 3.3, 1, NOW()),
+(3, 2, 180.45, 2.3, 1, NOW()),
+(3, 4, 160.30, 2.0, 1, NOW()),
+(3, 5, 280.70, 3.5, 1, NOW()),
+(3, 6, 240.80, 3.0, 1, NOW()),
+(3, 7, 400.50, 5.0, 1, NOW()),
+(3, 8, 510.20, 6.0, 1, NOW()),
+(3, 9, 230.40, 3.0, 1, NOW()),
+(3, 10, 630.60, 7.0, 1, NOW()),
+
+-- 站点4与其他站点的路线
+(4, 1, 480.50, 6.0, 1, NOW()),
+(4, 2, 330.75, 4.0, 1, NOW()),
+(4, 3, 160.30, 2.0, 1, NOW()),
+(4, 5, 310.40, 4.0, 1, NOW()),
+(4, 6, 140.60, 2.0, 1, NOW()),
+(4, 7, 270.30, 3.5, 1, NOW()),
+(4, 8, 380.50, 4.5, 1, NOW()),
+(4, 9, 190.70, 2.5, 1, NOW()),
+(4, 10, 470.90, 5.5, 1, NOW()),
+
+-- 站点5与其他站点的路线
+(5, 1, 210.30, 2.5, 1, NOW()),
+(5, 2, 240.60, 3.0, 1, NOW()),
+(5, 3, 280.70, 3.5, 1, NOW()),
+(5, 4, 310.40, 4.0, 1, NOW()),
+(5, 6, 350.20, 4.0, 1, NOW()),
+(5, 7, 510.40, 6.0, 1, NOW()),
+(5, 8, 620.70, 7.0, 1, NOW()),
+(5, 9, 220.30, 3.0, 1, NOW()),
+(5, 10, 740.80, 8.0, 1, NOW()),
+
+-- 站点6与其他站点的路线
+(6, 1, 560.70, 7.0, 1, NOW()),
+(6, 2, 410.30, 5.0, 1, NOW()),
+(6, 3, 240.80, 3.0, 1, NOW()),
+(6, 4, 140.60, 2.0, 1, NOW()),
+(6, 5, 350.20, 4.0, 1, NOW()),
+(6, 7, 160.40, 2.0, 1, NOW()),
+(6, 8, 270.30, 3.5, 1, NOW()),
+(6, 9, 190.20, 2.5, 1, NOW()),
+(6, 10, 390.50, 4.5, 1, NOW()),
+
+-- 站点7与其他站点的路线
+(7, 1, 720.40, 8.0, 1, NOW()),
+(7, 2, 570.80, 7.0, 1, NOW()),
+(7, 3, 400.50, 5.0, 1, NOW()),
+(7, 4, 270.30, 3.5, 1, NOW()),
+(7, 5, 510.40, 6.0, 1, NOW()),
+(7, 6, 160.40, 2.0, 1, NOW()),
+(7, 8, 120.60, 1.5, 1, NOW()),
+(7, 9, 300.70, 4.0, 1, NOW()),
+(7, 10, 240.30, 3.0, 1, NOW()),
+
+-- 站点8与其他站点的路线
+(8, 1, 830.60, 9.0, 1, NOW()),
+(8, 2, 680.40, 8.0, 1, NOW()),
+(8, 3, 510.20, 6.0, 1, NOW()),
+(8, 4, 380.50, 4.5, 1, NOW()),
+(8, 5, 620.70, 7.0, 1, NOW()),
+(8, 6, 270.30, 3.5, 1, NOW()),
+(8, 7, 120.60, 1.5, 1, NOW()),
+(8, 9, 410.80, 5.0, 1, NOW()),
+(8, 10, 135.40, 2.0, 1, NOW()),
+
+-- 站点9与其他站点的路线
+(9, 1, 420.90, 5.0, 1, NOW()),
+(9, 2, 290.50, 3.5, 1, NOW()),
+(9, 3, 230.40, 3.0, 1, NOW()),
+(9, 4, 190.70, 2.5, 1, NOW()),
+(9, 5, 220.30, 3.0, 1, NOW()),
+(9, 6, 190.20, 2.5, 1, NOW()),
+(9, 7, 300.70, 4.0, 1, NOW()),
+(9, 8, 410.80, 5.0, 1, NOW()),
+(9, 10, 530.60, 6.0, 1, NOW()),
+
+-- 站点10与其他站点的路线
+(10, 1, 950.20, 10.0, 1, NOW()),
+(10, 2, 800.10, 9.0, 1, NOW()),
+(10, 3, 630.60, 7.0, 1, NOW()),
+(10, 4, 470.90, 5.5, 1, NOW()),
+(10, 5, 740.80, 8.0, 1, NOW()),
+(10, 6, 390.50, 4.5, 1, NOW()),
+(10, 7, 240.30, 3.0, 1, NOW()),
+(10, 8, 135.40, 2.0, 1, NOW()),
+(10, 9, 530.60, 6.0, 1, NOW());
+
+-- 添加客户ID(假设客户ID从101-120)，创建订单数据
+INSERT INTO transport_order 
+(order_no, customer_id, source_station_id, target_station_id, weight, volume, expected_delivery, status, create_time) 
+VALUES
+-- 已完成的订单(对应任务1-5)
+('ORD20240101001', 101, 1, 10, 1500.50, 8.5, DATE_SUB(NOW(), INTERVAL 3 DAY), 3, DATE_SUB(NOW(), INTERVAL 7 DAY)), -- 送往北京
+('ORD20240102002', 102, 2, 5, 800.20, 4.2, DATE_SUB(NOW(), INTERVAL 6 DAY), 3, DATE_SUB(NOW(), INTERVAL 10 DAY)), -- 送往厦门
+('ORD20240103003', 103, 3, 7, 2200.00, 12.8, DATE_SUB(NOW(), INTERVAL 10 DAY), 3, DATE_SUB(NOW(), INTERVAL 15 DAY)), -- 送往南京
+('ORD20240104004', 104, 4, 6, 1200.30, 6.4, DATE_SUB(NOW(), INTERVAL 10 DAY), 5, DATE_SUB(NOW(), INTERVAL 12 DAY)), -- 取消的订单
+('ORD20240105005', 105, 5, 2, 950.80, 5.2, DATE_SUB(NOW(), INTERVAL 5 DAY), 3, DATE_SUB(NOW(), INTERVAL 8 DAY)), -- 送往西安
+
+-- 执行中的订单(对应任务6-10)
+('ORD20240106006', 106, 6, 3, 1800.40, 9.8, DATE_ADD(NOW(), INTERVAL 1 DAY), 2, DATE_SUB(NOW(), INTERVAL 5 DAY)),
+('ORD20240107007', 107, 7, 1, 2500.00, 14.5, DATE_ADD(NOW(), INTERVAL 2 DAY), 2, DATE_SUB(NOW(), INTERVAL 5 DAY)),
+('ORD20240108008', 108, 8, 4, 1350.70, 7.2, DATE_ADD(NOW(), INTERVAL 1 DAY), 2, DATE_SUB(NOW(), INTERVAL 4 DAY)),
+('ORD20240109009', 109, 9, 6, 1650.30, 8.9, DATE_ADD(NOW(), INTERVAL 2 DAY), 2, DATE_SUB(NOW(), INTERVAL 3 DAY)),
+('ORD20240110010', 110, 10, 2, 980.60, 5.3, DATE_ADD(NOW(), INTERVAL 1 DAY), 2, DATE_SUB(NOW(), INTERVAL 3 DAY)),
+
+-- 已分配但未执行的订单(对应任务11-15)
+('ORD20240111011', 111, 1, 6, 2100.40, 11.2, DATE_ADD(NOW(), INTERVAL 3 DAY), 1, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+('ORD20240112012', 112, 2, 9, 1400.80, 7.6, DATE_ADD(NOW(), INTERVAL 3 DAY), 1, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+('ORD20240113013', 113, 3, 8, 1850.20, 9.9, DATE_ADD(NOW(), INTERVAL 3 DAY), 1, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+('ORD20240114014', 114, 4, 10, 2700.50, 15.2, DATE_ADD(NOW(), INTERVAL 2 DAY), 1, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+('ORD20240115015', 115, 5, 7, 1250.90, 6.8, DATE_ADD(NOW(), INTERVAL 3 DAY), 1, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+
+-- 新创建的订单(对应任务16-20)
+('ORD20240116016', 116, 6, 9, 1950.40, 10.5, DATE_ADD(NOW(), INTERVAL 5 DAY), 0, NOW()),
+('ORD20240117017', 117, 7, 2, 2200.10, 12.0, DATE_ADD(NOW(), INTERVAL 5 DAY), 0, NOW()),
+('ORD20240118018', 118, 8, 1, 1150.60, 6.2, DATE_ADD(NOW(), INTERVAL 5 DAY), 0, NOW()),
+('ORD20240119019', 119, 9, 3, 1350.80, 7.3, DATE_ADD(NOW(), INTERVAL 5 DAY), 0, NOW()),
+('ORD20240120020', 120, 10, 5, 1750.30, 9.4, DATE_ADD(NOW(), INTERVAL 5 DAY), 0, NOW());
+
+-- 创建任务数据，与task_execution_log中的任务对应
+INSERT INTO transport_task 
+(id, task_no, order_id, vehicle_id, driver_id, source_id, target_id, planned_start, planned_end, status, create_time) 
+VALUES
+-- 已完成的任务(1-5)
+(1, 'TASK20240101001', 1, 1, 2, 1, 10, DATE_SUB(NOW(), INTERVAL 6 DAY), DATE_ADD(DATE_SUB(NOW(), INTERVAL 6 DAY), INTERVAL 10 HOUR), 3, DATE_SUB(NOW(), INTERVAL 7 DAY)),
+(2, 'TASK20240102002', 2, 3, 4, 2, 5, DATE_SUB(NOW(), INTERVAL 9 DAY), DATE_ADD(DATE_SUB(NOW(), INTERVAL 9 DAY), INTERVAL 3 HOUR), 3, DATE_SUB(NOW(), INTERVAL 10 DAY)),
+(3, 'TASK20240103003', 3, 2, 5, 3, 7, DATE_SUB(NOW(), INTERVAL 14 DAY), DATE_ADD(DATE_SUB(NOW(), INTERVAL 14 DAY), INTERVAL 5 HOUR), 3, DATE_SUB(NOW(), INTERVAL 15 DAY)),
+(4, 'TASK20240104004', 4, 5, 3, 4, 6, DATE_SUB(NOW(), INTERVAL 11 DAY), DATE_ADD(DATE_SUB(NOW(), INTERVAL 11 DAY), INTERVAL 2 HOUR), 5, DATE_SUB(NOW(), INTERVAL 12 DAY)),
+(5, 'TASK20240105005', 5, 4, 1, 5, 2, DATE_SUB(NOW(), INTERVAL 7 DAY), DATE_ADD(DATE_SUB(NOW(), INTERVAL 7 DAY), INTERVAL 3 HOUR), 3, DATE_SUB(NOW(), INTERVAL 8 DAY)),
+
+-- 执行中的任务(6-10)
+(6, 'TASK20240106006', 6, 6, 6, 6, 3, DATE_SUB(NOW(), INTERVAL 4 DAY), DATE_ADD(DATE_SUB(NOW(), INTERVAL 4 DAY), INTERVAL 3 HOUR), 2, DATE_SUB(NOW(), INTERVAL 5 DAY)),
+(7, 'TASK20240107007', 7, 7, 7, 7, 1, DATE_SUB(NOW(), INTERVAL 4 DAY), DATE_ADD(DATE_SUB(NOW(), INTERVAL 4 DAY), INTERVAL 8 HOUR), 2, DATE_SUB(NOW(), INTERVAL 5 DAY)),
+(8, 'TASK20240108008', 8, 8, 8, 8, 4, DATE_SUB(NOW(), INTERVAL 3 DAY), DATE_ADD(DATE_SUB(NOW(), INTERVAL 3 DAY), INTERVAL 4.5 HOUR), 2, DATE_SUB(NOW(), INTERVAL 4 DAY)),
+(9, 'TASK20240109009', 9, 9, 9, 9, 6, DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_ADD(DATE_SUB(NOW(), INTERVAL 2 DAY), INTERVAL 2.5 HOUR), 2, DATE_SUB(NOW(), INTERVAL 3 DAY)),
+(10, 'TASK20240110010', 10, 10, 10, 10, 2, DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_ADD(DATE_SUB(NOW(), INTERVAL 2 DAY), INTERVAL 9 HOUR), 2, DATE_SUB(NOW(), INTERVAL 3 DAY)),
+
+-- 已分配但未执行的任务(11-15)
+(11, 'TASK20240111011', 11, 11, 11, 1, 6, DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_ADD(DATE_SUB(NOW(), INTERVAL 1 DAY), INTERVAL 7 HOUR), 1, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(12, 'TASK20240112012', 12, 12, 12, 2, 9, DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_ADD(DATE_SUB(NOW(), INTERVAL 1 DAY), INTERVAL 3.5 HOUR), 1, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(13, 'TASK20240113013', 13, 13, 13, 3, 8, DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_ADD(DATE_SUB(NOW(), INTERVAL 1 DAY), INTERVAL 6 HOUR), 1, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(14, 'TASK20240114014', 14, 14, 14, 4, 10, DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_ADD(DATE_SUB(NOW(), INTERVAL 1 DAY), INTERVAL 5.5 HOUR), 1, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(15, 'TASK20240115015', 15, 15, 15, 5, 7, DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_ADD(DATE_SUB(NOW(), INTERVAL 1 DAY), INTERVAL 6 HOUR), 1, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+
+-- 新创建的任务(16-20)
+(16, 'TASK20240116016', 16, NULL, NULL, 6, 9, DATE_ADD(NOW(), INTERVAL 1 DAY), DATE_ADD(DATE_ADD(NOW(), INTERVAL 1 DAY), INTERVAL 2.5 HOUR), 0, NOW()),
+(17, 'TASK20240117017', 17, NULL, NULL, 7, 2, DATE_ADD(NOW(), INTERVAL 1 DAY), DATE_ADD(DATE_ADD(NOW(), INTERVAL 1 DAY), INTERVAL 7 HOUR), 0, NOW()),
+(18, 'TASK20240118018', 18, NULL, NULL, 8, 1, DATE_ADD(NOW(), INTERVAL 1 DAY), DATE_ADD(DATE_ADD(NOW(), INTERVAL 1 DAY), INTERVAL 9 HOUR), 0, NOW()),
+(19, 'TASK20240119019', 19, NULL, NULL, 9, 3, DATE_ADD(NOW(), INTERVAL 1 DAY), DATE_ADD(DATE_ADD(NOW(), INTERVAL 1 DAY), INTERVAL 3 HOUR), 0, NOW()),
+(20, 'TASK20240120020', 20, NULL, NULL, 10, 5, DATE_ADD(NOW(), INTERVAL 1 DAY), DATE_ADD(DATE_ADD(NOW(), INTERVAL 1 DAY), INTERVAL 8 HOUR), 0, NOW());
+
+-- 更新车辆和司机状态以保持数据一致性
+-- 任务1-5对应的车辆和司机已完成或取消任务，状态为空闲(1)，除了任务4被取消的情况
+UPDATE vehicle SET status = 1 WHERE id IN (1, 2, 3, 4, 5);
+UPDATE driver SET status = 1 WHERE id IN (1, 2, 3, 4, 5);
+
+-- 任务6-10对应的车辆和司机正在执行任务，状态为任务中(2)
+UPDATE vehicle SET status = 2 WHERE id IN (6, 7, 8, 9, 10);
+UPDATE driver SET status = 2 WHERE id IN (6, 7, 8, 9, 10);
+
+-- 任务11-15对应的车辆和司机已分配但未执行任务，状态为任务中(2)
+UPDATE vehicle SET status = 2 WHERE id IN (11, 12, 13, 14, 15);
+UPDATE driver SET status = 2 WHERE id IN (11, 12, 13, 14, 15); 

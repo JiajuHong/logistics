@@ -1,0 +1,63 @@
+.vehicle-card {
+  margin-bottom: 16px;
+  transition: all 0.3s;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+  }
+  
+  .vehicle-card-title {
+    display: flex;
+    align-items: center;
+    
+    .vehicle-no {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+    
+    .vehicle-status {
+      margin-left: 8px;
+    }
+  }
+  
+  .vehicle-card-content {
+    height: 160px;
+    overflow-y: auto;
+    
+    .info-item {
+      margin-bottom: 12px;
+      display: flex;
+      
+      .label {
+        color: rgba(0, 0, 0, 0.45);
+        width: 80px;
+        flex-shrink: 0;
+      }
+      
+      .value {
+        flex: 1;
+        font-weight: 500;
+        color: #262626;
+      }
+    }
+  }
+  
+  .ant-card-actions {
+    background: #fafafa;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+  
+  .ant-card-head {
+    border-bottom: 1px solid #f0f0f0;
+    padding: 0 16px;
+  }
+  
+  .ant-card-head-title {
+    padding: 16px 0;
+  }
+} 

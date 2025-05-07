@@ -1,0 +1,56 @@
+.stationCard {
+  transition: all 0.3s;
+  height: 100%;
+  
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
+  }
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.stationName {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 70%;
+}
+
+.cardContent {
+  margin-bottom: 16px;
+}
+
+.labelText {
+  color: rgba(0, 0, 0, 0.45);
+  margin-right: 8px;
+}
+
+/* 站点图片样式 */
+.stationImage {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+}
+
+/* 占位符样式 */
+.placeholder {
+  width: 100%;
+  height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.icon {
+  font-size: 36px;
+  margin-bottom: 8px;
+} 

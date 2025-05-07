@@ -1,0 +1,135 @@
+.mapContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.mapCard {
+  :global {
+    .ant-card-body {
+      padding: 0;
+    }
+  }
+}
+
+.policySelector {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 12px;
+}
+
+.policySelect {
+  :global {
+    .ant-select-selector {
+      display: flex;
+      align-items: center;
+      padding-right: 12px !important;
+      border-radius: 20px !important;
+      border-color: #e8e8e8 !important;
+      
+      .ant-select-selection-item {
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+      }
+    }
+    
+    .ant-select-arrow {
+      display: none !important;
+    }
+    
+    .ant-select-focused .ant-select-selector {
+      box-shadow: 0 0 0 2px rgba(151, 151, 151, 0.2) !important;
+    }
+  }
+}
+
+.policyOption {
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+}
+
+/* Global styles */
+:global(.ant-select-dropdown) {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 3px 6px -4px rgba(0,0,0,0.12), 0 6px 16px 0 rgba(0,0,0,0.08), 0 9px 28px 8px rgba(0,0,0,0.05);
+  
+  :global(.ant-select-item) {
+    padding: 8px 12px;
+    
+    &-option-active:not(.ant-select-item-option-selected) {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+    
+    &-option-selected {
+      font-weight: 500;
+      background-color: rgba(0, 0, 0, 0.08);
+    }
+  }
+}
+
+.policyIcon {
+  margin-right: 8px;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+}
+
+.suffixIcon {
+  display: flex;
+  align-items: center;
+}
+
+.mapViewControl {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  z-index: 100;
+  background-color: white;
+  padding: 5px;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.pointDetailCard {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 100;
+  width: 300px;
+  max-width: 80%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.infoWindow {
+  max-width: 260px;
+  padding: 10px;
+}
+
+.infoWindowItem {
+  margin-bottom: 6px;
+}
+
+.infoWindowLabel {
+  display: inline-block;
+  width: 70px;
+  color: #666;
+}
+
+.infoWindowValue {
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .mapContainer {
+    height: 350px;
+  }
+  
+  .pointDetailCard {
+    width: 220px;
+  }
+} 

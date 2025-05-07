@@ -1,0 +1,223 @@
+/* 直接定义样式变量，避免导入问题 */
+@primary-color: #1890ff;
+@background-color-light: #f5f5f5;
+@text-color-secondary: rgba(0, 0, 0, 0.45);
+@border-color-base: #d9d9d9;
+
+.taskAdminContainer {
+  padding: 24px;
+  
+  .statisticsRow {
+    margin-bottom: 24px;
+  }
+  
+  .statisticCard {
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+    transition: all 0.3s;
+    
+    &:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    }
+    
+    .statisticFooter {
+      margin-top: 8px;
+    }
+  }
+  
+  .filterCard {
+    margin-bottom: 24px;
+    border-radius: 8px;
+    
+    .filterForm {
+      padding: 8px 0;
+    }
+  }
+  
+  .toolbar {
+    margin-bottom: 16px;
+  }
+  
+  .contentCard {
+    border-radius: 8px;
+  }
+  
+  .cardContainer {
+    .pagination {
+      margin-top: 24px;
+      text-align: right;
+    }
+  }
+  
+  .loading {
+    padding: 50px 0;
+    text-align: center;
+  }
+}
+
+// 任务卡片样式
+.taskCard {
+  border-radius: 8px;
+  transition: all 0.3s;
+  height: 100%;
+  
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    transform: translateY(-3px);
+  }
+  
+  .taskCardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    .taskCardTitle {
+      flex: 1;
+      overflow: hidden;
+    }
+  }
+  
+  .taskCardBody {
+    margin-top: 12px;
+  }
+  
+  .routeInfo {
+    display: flex;
+    align-items: center;
+    margin: 12px 0;
+    background-color: @background-color-light;
+    padding: 8px;
+    border-radius: 4px;
+    
+    .stationInfo {
+      flex: 1;
+      text-align: center;
+      padding: 0 8px;
+    }
+    
+    .routeArrow {
+      color: @primary-color;
+      padding: 0 8px;
+    }
+  }
+  
+  .vehicleDriverInfo {
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+    
+    .vehicleInfo, .driverInfo {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      
+      .anticon {
+        margin-right: 8px;
+        color: @text-color-secondary;
+      }
+    }
+  }
+  
+  .timeInfo {
+    margin-top: 8px;
+    font-size: 12px;
+    color: @text-color-secondary;
+  }
+}
+
+// 状态颜色
+.task-status-0 {  // 待分配
+  .taskCardHeader {
+    border-bottom: 2px solid #1890ff;
+  }
+}
+
+.task-status-1 {  // 待执行
+  .taskCardHeader {
+    border-bottom: 2px solid #fa8c16;
+  }
+}
+
+.task-status-2 {  // 执行中
+  .taskCardHeader {
+    border-bottom: 2px solid #52c41a;
+  }
+}
+
+.task-status-3 {  // 已完成
+  .taskCardHeader {
+    border-bottom: 2px solid #d9d9d9;
+  }
+}
+
+.task-status-4 {  // 已取消
+  .taskCardHeader {
+    border-bottom: 2px solid #f5222d;
+  }
+}
+
+// 任务详情弹窗
+.taskDetailModal {
+  .detailRow {
+    margin-bottom: 16px;
+    
+    .label {
+      color: @text-color-secondary;
+      margin-right: 8px;
+    }
+  }
+  
+  .statusTimeline {
+    margin-top: 24px;
+  }
+}
+
+// 分配任务弹窗
+.assignTaskModal {
+  .resourceSelection {
+    margin-top: 16px;
+    
+    .resourceCard {
+      cursor: pointer;
+      margin-bottom: 16px;
+      border: 1px solid @border-color-base;
+      border-radius: 8px;
+      padding: 16px;
+      transition: all 0.3s;
+      
+      &:hover {
+        border-color: @primary-color;
+      }
+      
+      &.selected {
+        border-color: @primary-color;
+        background-color: fade(@primary-color, 5%);
+      }
+      
+      .resourceHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+      
+      .resourceMeta {
+        display: flex;
+        flex-wrap: wrap;
+        
+        .metaItem {
+          margin-right: 16px;
+          margin-bottom: 4px;
+          display: flex;
+          align-items: center;
+          
+          .anticon {
+            margin-right: 4px;
+            font-size: 12px;
+            color: @text-color-secondary;
+          }
+        }
+      }
+    }
+  }
+} 

@@ -1,0 +1,261 @@
+.container {
+  padding: 16px;
+}
+
+.tabs {
+  background-color: #fff;
+  padding: 0;
+  border-radius: 2px;
+}
+
+.formCard,
+.resultCard {
+  margin-bottom: 16px;
+}
+
+.mapContainer {
+  margin: 24px 0;
+}
+
+.stationList {
+  margin-top: 24px;
+
+  h3 {
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
+  
+  ol {
+    padding-left: 24px;
+    
+    li {
+      margin-bottom: 8px;
+      padding: 8px;
+      background-color: #f9f9f9;
+      border-radius: 4px;
+      
+      &:nth-child(odd) {
+        background-color: #f0f5ff;
+      }
+      
+      &:first-child, &:last-child {
+        font-weight: 500;
+        background-color: #e6f7ff;
+      }
+    }
+  }
+}
+
+.advancedToggle {
+  text-align: right;
+  margin-bottom: 16px;
+  padding-right: 16px;
+}
+
+.advancedLabel {
+  margin-left: 8px;
+  color: #1890ff;
+  cursor: pointer;
+}
+
+.advancedPanel {
+  margin: 0 24px 24px;
+  padding: 16px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  border: 1px solid #f0f0f0;
+}
+
+.panelTitle {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.sliderItem {
+  margin-bottom: 8px;
+}
+
+.sliderLabel {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.sliderValue {
+  font-weight: 500;
+  color: #1890ff;
+}
+
+.switchItem {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.switchLabel {
+  margin-left: 8px;
+}
+
+.advancedParams {
+  margin-bottom: 16px;
+}
+
+.weightValue {
+  text-align: center;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.resultsTabs {
+  :global {
+    .ant-tabs-nav {
+      margin-bottom: 8px;
+    }
+  }
+}
+
+/* 路径点列表样式 */
+.pathPointsList {
+  margin-top: 16px;
+  border: 1px solid #f0f0f0;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.pathPointsTitle {
+  padding: 12px 16px;
+  font-weight: 500;
+  background-color: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.pathPointsTable {
+  padding: 8px 0;
+}
+
+.pathPointRow {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.pathPointIndex {
+  flex: 0 0 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.indexCircle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+.pathPointInfo {
+  flex: 1;
+  padding: 0 12px;
+}
+
+.pathPointName {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.pathPointType {
+  flex: 0 0 80px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.pathPointBadge {
+  padding: 2px 8px;
+  border-radius: 10px;
+  color: white;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* 支持水平布局的样式 */
+.horizontalLayoutContainer {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.mapSection {
+  flex: 1;
+  min-width: 500px;
+}
+
+.tablesSection {
+  flex: 1;
+  min-width: 400px;
+  max-width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  max-height: 800px;
+}
+
+/* 对表格样式的优化 */
+:global(.ant-table-small) {
+  font-size: 12px;
+}
+
+:global(.ant-descriptions-small .ant-descriptions-item-label),
+:global(.ant-descriptions-small .ant-descriptions-item-content) {
+  padding: 8px 12px;
+}
+
+/* 响应式布局 */
+@media (max-width: 1200px) {
+  .horizontalLayoutContainer {
+    flex-direction: column;
+  }
+  
+  .mapSection,
+  .tablesSection {
+    max-width: 100%;
+    width: 100%;
+  }
+  
+  .tablesSection {
+    max-height: none;
+    overflow-y: visible;
+  }
+}
+
+/* 选中的行样式 */
+.selectedRow {
+  background-color: #e6f7ff !important;
+}
+
+/* 订单选择器样式 */
+.orderSelector {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+
+  .selectorLabel {
+    margin-right: 12px;
+    font-weight: 500;
+  }
+
+  .selector {
+    min-width: 300px;
+  }
+} 

@@ -1,0 +1,59 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景元素 -->
+  <circle cx="200" cy="150" r="120" fill="#E6F7FF" opacity="0.5"/>
+  
+  <!-- 地图元素 -->
+  <path d="M100 180 L150 120 L220 160 L280 110 L330 170" stroke="#1677FF" stroke-width="4" stroke-dasharray="6 3" fill="none" opacity="0.8"/>
+  
+  <!-- 站点标记 -->
+  <circle cx="100" cy="180" r="10" fill="#1677FF"/>
+  <circle cx="150" cy="120" r="8" fill="#1677FF"/>
+  <circle cx="220" cy="160" r="12" fill="#1677FF"/>
+  <circle cx="280" cy="110" r="8" fill="#1677FF"/>
+  <circle cx="330" cy="170" r="10" fill="#1677FF"/>
+  
+  <!-- 运输车辆 -->
+  <g transform="translate(170, 140) scale(0.8)">
+    <!-- 卡车车身 -->
+    <rect x="10" y="40" width="130" height="60" rx="10" fill="#1677FF"/>
+    <!-- 卡车车头 -->
+    <rect x="-30" y="55" width="50" height="45" rx="8" fill="#1677FF"/>
+    <!-- 车窗 -->
+    <rect x="-20" y="65" width="30" height="20" rx="5" fill="#E6F7FF"/>
+    <!-- 货厢 -->
+    <rect x="15" y="45" width="120" height="50" rx="5" fill="#E6F7FF" opacity="0.7"/>
+    <!-- 轮子 -->
+    <circle cx="0" cy="105" r="14" fill="#333"/>
+    <circle cx="0" cy="105" r="7" fill="#666"/>
+    <circle cx="50" cy="105" r="14" fill="#333"/>
+    <circle cx="50" cy="105" r="7" fill="#666"/>
+    <circle cx="110" cy="105" r="14" fill="#333"/>
+    <circle cx="110" cy="105" r="7" fill="#666"/>
+  </g>
+  
+  <!-- 地图标记图标 -->
+  <g transform="translate(260, 70) scale(0.6)">
+    <path d="M25,0 C11.2,0 0,11.2 0,25 C0,38.8 25,80 25,80 C25,80 50,38.8 50,25 C50,11.2 38.8,0 25,0 Z" fill="#FF4D4F"/>
+    <circle cx="25" cy="25" r="12" fill="white"/>
+  </g>
+  
+  <!-- 动态元素 - 数据流线 -->
+  <path d="M110 190 C150 220, 200 200, 240 170 C280 140, 320 160, 350 180" stroke="#52C41A" stroke-width="3" fill="none" opacity="0.8">
+    <animate attributeName="stroke-dashoffset" from="100" to="0" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="stroke-dasharray" values="5,5; 10,10; 5,5" dur="4s" repeatCount="indefinite"/>
+  </path>
+  
+  <!-- 包裹图标 -->
+  <g transform="translate(100, 220) scale(0.7)">
+    <rect x="0" y="0" width="40" height="40" fill="#FAAD14"/>
+    <rect x="0" y="0" width="40" height="10" fill="#D48806"/>
+    <rect x="15" y="15" width="10" height="10" fill="#FFF7E6"/>
+  </g>
+  
+  <!-- 另一个包裹图标 -->
+  <g transform="translate(280, 200) scale(0.6)">
+    <rect x="0" y="0" width="45" height="35" fill="#52C41A"/>
+    <rect x="0" y="0" width="45" height="8" fill="#237804"/>
+    <rect x="18" y="13" width="10" height="10" fill="#F6FFED"/>
+  </g>
+</svg> 
