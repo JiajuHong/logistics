@@ -11,7 +11,8 @@ import {
   deleteStation,
   listRegion,
   listStationByPage,
-  updateStation
+  updateStation,
+  listStation
 } from '@/services/api';
 import CreateModal from './components/CreateModal';
 import UpdateModal from './components/UpdateModal';
@@ -262,30 +263,46 @@ const StationAdmin: React.FC = () => {
     setLoading(true);
     console.log('开始加载站点数据，参数:', params);
     try {
-      // 确保参数格式正确，后端API可能对current和pageSize有严格要求
-      const requestParams = {
-        // 为卡片视图提供默认分页参数
-        current: cardCurrent,
-        pageSize: cardPageSize,
-        // 合并其他查询参数
-        ...params,
-      };
-      console.log('格式化后的请求参数:', requestParams);
-
-      const res = await listStationByPage(requestParams);
-      console.log('站点数据加载结果:', res);
-      if (res?.data) {
-        console.log('成功获取站点记录数:', res.data.records?.length || 0);
-        setStationList(res.data.records || []);
-        setTotal(res.data.total || 0);
-        
-        // 如果没有明确传入page参数，则使用返回的current
-        if (!params || !params.current) {
-          setCardCurrent(res.data.current || cardCurrent);
+      // 地图视图使用不分页的接口获取所有数据
+      if (viewType === 'map') {
+        console.log('地图视图模式：获取所有站点数据');
+        const res = await listStation({});
+        console.log('获取所有站点数据结果:', res);
+        if (res?.data) {
+          console.log('成功获取所有站点记录数:', res.data?.length || 0);
+          setStationList(res.data || []);
+          setTotal(res.data?.length || 0);
+        } else {
+          console.warn('获取站点数据失败，响应没有data字段:', res);
+          message.error('加载站点数据失败');
         }
       } else {
-        console.warn('获取站点数据失败，响应没有data字段:', res);
-        message.error('加载站点数据失败');
+        // 卡片视图使用分页接口
+        // 确保参数格式正确，后端API可能对current和pageSize有严格要求
+        const requestParams = {
+          // 为卡片视图提供默认分页参数
+          current: cardCurrent,
+          pageSize: cardPageSize,
+          // 合并其他查询参数
+          ...params,
+        };
+        console.log('格式化后的请求参数:', requestParams);
+
+        const res = await listStationByPage(requestParams);
+        console.log('站点数据加载结果:', res);
+        if (res?.data) {
+          console.log('成功获取站点记录数:', res.data.records?.length || 0);
+          setStationList(res.data.records || []);
+          setTotal(res.data.total || 0);
+          
+          // 如果没有明确传入page参数，则使用返回的current
+          if (!params || !params.current) {
+            setCardCurrent(res.data.current || cardCurrent);
+          }
+        } else {
+          console.warn('获取站点数据失败，响应没有data字段:', res);
+          message.error('加载站点数据失败');
+        }
       }
     } catch (error) {
       console.error('加载站点数据出错:', error);

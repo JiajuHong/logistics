@@ -1,14 +1,7 @@
 package com.jiaju.springbootinit.aop;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
 import com.jiaju.springbootinit.common.ErrorCode;
 import com.jiaju.springbootinit.exception.BusinessException;
-import com.jiaju.springbootinit.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -21,6 +14,11 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
 import static com.jiaju.springbootinit.constant.UserConstant.USER_LOGIN_STATE;
 
 /**
@@ -30,9 +28,6 @@ import static com.jiaju.springbootinit.constant.UserConstant.USER_LOGIN_STATE;
 @Component
 @Slf4j
 public class LogInterceptor {
-
-    @Resource
-    private UserService userService;
 
     /**
      * 允许未登录访问的接口列表

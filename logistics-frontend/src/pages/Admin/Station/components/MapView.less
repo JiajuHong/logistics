@@ -31,4 +31,145 @@
 .placeholderInfo {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.45);
+}
+
+/* 地图控制组件样式 */
+.mapControls {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 100;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 8px;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 信息窗体样式 */
+:global(.map-info-window) {
+  padding: 10px;
+  max-width: 280px;
+}
+
+:global(.map-info-window h3) {
+  margin: 0 0 8px;
+  font-size: 16px;
+  color: #1890ff;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 5px;
+}
+
+:global(.map-info-window p) {
+  margin: 4px 0;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+:global(.map-info-window p strong) {
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+/* 确保地图在全屏模式下也能正常显示 */
+:fullscreen .mapContainer {
+  height: 100vh;
+}
+
+:-webkit-full-screen .mapContainer {
+  height: 100vh;
+}
+
+:-moz-full-screen .mapContainer {
+  height: 100vh;
+}
+
+:-ms-fullscreen .mapContainer {
+  height: 100vh;
+}
+
+/* 响应式样式 */
+@media (max-width: 768px) {
+  .mapContainer {
+    height: 400px;
+  }
+  
+  .mapControls {
+    bottom: 10px;
+    top: auto;
+    left: 10px;
+    right: auto;
+  }
+}
+
+/* 添加站点状态样式 */
+:global(.status-active) {
+  background-color: #52c41a;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 12px;
+  display: inline-block;
+}
+
+:global(.status-inactive) {
+  background-color: #f5222d;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 12px;
+  display: inline-block;
+}
+
+/* 地图图例样式 */
+.mapLegend {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 6px 8px;
+  border-radius: 4px;
+  border: 1px solid #f0f0f0;
+  font-size: 12px;
+  width: 100%;
+}
+
+.legendTitle {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.legendColor {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin-right: 8px;
+  border: 1px solid white;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+  
+  &.active {
+    background-color: #52c41a;
+  }
+  
+  &.inactive {
+    background-color: #f5222d;
+  }
+}
+
+/* 区域筛选样式 */
+.regionFilter {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 6px 8px;
+  border-radius: 4px;
+  border: 1px solid #f0f0f0;
+  font-size: 12px;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.filterTitle {
+  font-weight: bold;
+  margin-bottom: 4px;
 } 

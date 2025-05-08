@@ -15,7 +15,6 @@ import {
 import CreateModal from './components/CreateModal';
 import UpdateModal from './components/UpdateModal';
 import CustomPagination from '@/components/CustomPagination';
-const RegionMap = lazy(() => import('./components/RegionMap'));
 
 // 视图类型枚举
 type ViewType = 'table' | 'tree' | 'map';
@@ -381,29 +380,6 @@ const RegionAdmin: React.FC = () => {
   // 渲染视图内容
   const renderViewContent = () => {
     switch (viewType) {
-      case 'map':
-        return (
-          <ErrorBoundary
-            fallback={
-              <Card title="区域地图视图" style={{ height: 'calc(100vh - 260px)' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-                  <div style={{ marginBottom: 16 }}>地图加载失败</div>
-                  <Button type="primary" onClick={() => loadAllRegions()}>
-                    重试
-                  </Button>
-                </div>
-              </Card>
-            }
-          >
-            <Suspense fallback={<Spin tip="加载地图组件中..." style={{ display: 'flex', justifyContent: 'center', padding: '50px' }} />}>
-              <RegionMap
-                regions={allRegions}
-                loading={mapLoading}
-                onSelectRegion={handleMapRegionSelect as any}
-              />
-            </Suspense>
-          </ErrorBoundary>
-        );
       case 'table':
       case 'tree':
       default:
@@ -575,7 +551,6 @@ const RegionAdmin: React.FC = () => {
             options={[
               { label: '树形视图', value: 'tree' },
               { label: '表格视图', value: 'table' },
-              { label: '地图视图', value: 'map' },
             ]}
           />
         ],
