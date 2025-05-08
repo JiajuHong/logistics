@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 物流网络图结构
@@ -254,7 +255,7 @@ public class LogisticsNetwork {
     }
     
     /**
-     * 判断是否为枢纽站点（新增）
+     * 判断是否为枢纽站点（修改）
      */
     public boolean isHubStation(Long stationId) {
         // 首先检查缓存
@@ -262,12 +263,28 @@ public class LogisticsNetwork {
             return true;
         }
         
-        // 如果缓存中没有，再检查站点编码
+        // 扩展枢纽站点识别条件
         Station station = stationMap.get(stationId);
-        if (station != null && station.getCode() != null && station.getCode().contains("ZX")) {
-            // 添加到缓存
-            hubStations.add(stationId);
-            return true;
+        if (station != null) {
+            // 条件1: 编码包含ZX
+            boolean codeCondition = station.getCode() != null && station.getCode().contains("ZX");
+            
+            // 条件2: 名称包含"中转"、"枢纽"、"物流中心"等关键词
+            boolean nameCondition = station.getName() != null && 
+                (station.getName().contains("中转") || 
+                 station.getName().contains("枢纽") || 
+                 station.getName().contains("物流中心") ||
+                 station.getName().contains("物流园"));
+            
+            // 条件3: 连接数量超过阈值（作为选择性条件）
+            int connectionCount = getAdjacentEdges(stationId).size();
+            boolean connectionCondition = connectionCount >= 5;  // 连接至少5个其他站点
+            
+            if (codeCondition || nameCondition || connectionCondition) {
+                // 添加到缓存
+                hubStations.add(stationId);
+                return true;
+            }
         }
         
         return false;
@@ -363,5 +380,83 @@ public class LogisticsNetwork {
         }
         
         return false;
+    }
+
+    public List<Station> getRegionHubStations(Long regionId) {
+        return stationMap.values().stream()
+                .filter(s -> regionId.equals(s.getRegionId()) && isHubStation(s.getId()))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 获取所有站点
+     */
+    public List<Station> getAllStations() {
+        return new ArrayList<>(stationMap.values());
+    }
+
+    /**
+     * 确保所有枢纽站点两两之间都有连接
+     * 这个方法应在初始化网络后调用，以确保所有区域中转站之间能够直接通行
+     */
+    public void ensureHubStationsConnectivity() {
+        if (hubStations.isEmpty()) {
+            log.warn("系统中没有标记任何枢纽站点，无法确保枢纽站点连通性");
+            return;
+        }
+        
+        log.info("开始确保枢纽站点间的连通性，共有{}个枢纽站点", hubStations.size());
+        
+        // 获取所有枢纽站点
+        List<Station> hubs = new ArrayList<>();
+        for (Long hubId : hubStations) {
+            Station hub = stationMap.get(hubId);
+            if (hub != null) {
+                hubs.add(hub);
+            }
+        }
+        
+        int addedEdges = 0;
+        
+        // 确保所有枢纽站点两两之间都有边
+        for (int i = 0; i < hubs.size(); i++) {
+            Station hub1 = hubs.get(i);
+            
+            for (int j = i + 1; j < hubs.size(); j++) {
+                Station hub2 = hubs.get(j);
+                
+                // 检查两个方向是否都有边
+                Edge edge1 = findEdge(hub1.getId(), hub2.getId());
+                Edge edge2 = findEdge(hub2.getId(), hub1.getId());
+                
+                // 如果两个枢纽站点间至少有一个方向没有边，则创建双向连接
+                if (edge1 == null || edge2 == null) {
+                    // 计算两站点间直线距离
+                    double distance = getDirectDistance(hub1.getId(), hub2.getId());
+                    
+                    // 估算运输时间（假设平均速度80km/h）
+                    int travelTime = (int) Math.ceil(distance / 80.0 * 60); // 转换为分钟
+                    
+                    // 估算运输成本（假设每公里5元）
+                    double transportCost = distance * 5.0;
+                    
+                    // 添加双向边
+                    if (edge1 == null) {
+                        addEdge(hub1.getId(), hub2.getId(), distance, travelTime, transportCost);
+                        addedEdges++;
+                    }
+                    
+                    if (edge2 == null) {
+                        addEdge(hub2.getId(), hub1.getId(), distance, travelTime, transportCost);
+                        addedEdges++;
+                    }
+                    
+                    log.debug("添加枢纽站点连接: {} <-> {}, 距离: {}", 
+                              hub1.getName(), hub2.getName(), distance);
+                }
+            }
+        }
+        
+        log.info("枢纽站点连通性处理完成，添加了{}条连接边", addedEdges);
     }
 }

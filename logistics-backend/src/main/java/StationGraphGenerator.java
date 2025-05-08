@@ -243,33 +243,46 @@ public class StationGraphGenerator {
      */
     private static void initializeRoutes(Connection conn, List<Station> stations) throws SQLException {
         System.out.println("开始创建站点路线连接...");
+        
+        // 清空现有route表数据
+        try (Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate("DELETE FROM logistics.route");
+            System.out.println("已清空现有路线数据");
+        }
 
+        // 使用内存Set跟踪已添加的路线
+        Set<String> addedRoutes = new HashSet<>();
+        
         // 准备插入语句
         String sql = "INSERT INTO logistics.route (from_station_id, to_station_id, distance, travel_time, transport_cost, status) VALUES (?, ?, ?, ?, ?, 1)";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             // 禁用自动提交，批量处理
             conn.setAutoCommit(false);
-
+            
             // 按区域分组
             Map<Long, List<Station>> regionStations = new HashMap<>();
             for (Station station : stations) {
                 regionStations.computeIfAbsent(station.getRegionId(), k -> new ArrayList<>()).add(station);
             }
 
-            // 为每个区域找到一个枢纽站点（通常是编号包含ZX的站点）
-            Map<Long, Station> hubStations = new HashMap<>();
+            // 为每个区域找到所有枢纽站点
+            Map<Long, List<Station>> regionHubStations = new HashMap<>();
             for (Map.Entry<Long, List<Station>> entry : regionStations.entrySet()) {
                 Long regionId = entry.getKey();
                 List<Station> regionStationList = entry.getValue();
 
-                // 找到区域内的枢纽站点
-                Station hub = regionStationList.stream()
+                // 找到区域内的所有枢纽站点
+                List<Station> hubs = regionStationList.stream()
                         .filter(s -> s.getCode() != null && s.getCode().contains("ZX"))
-                        .findFirst()
-                        .orElse(regionStationList.get(0)); // 如果没有符合条件的，取第一个站点
-
-                hubStations.put(regionId, hub);
+                        .collect(Collectors.toList());
+                
+                // 如果没有找到枢纽站点，添加第一个站点作为默认枢纽
+                if (hubs.isEmpty()) {
+                    hubs.add(regionStationList.get(0));
+                }
+                
+                regionHubStations.put(regionId, hubs);
             }
 
             int count = 0;
@@ -291,8 +304,8 @@ public class StationGraphGenerator {
                         int travelTime = (int) Math.ceil(distance / 60 * 60); // 转换为分钟
 
                         // 创建双向路线
-                        count += addRoute(pstmt, station1, station2, distance, travelTime);
-                        count += addRoute(pstmt, station2, station1, distance, travelTime);
+                        count += addRoute(pstmt, station1, station2, distance, travelTime, conn, addedRoutes);
+                        count += addRoute(pstmt, station2, station1, distance, travelTime, conn, addedRoutes);
 
                         // 使用可配置的批处理大小
                         if (count % BATCH_SIZE == 0) {
@@ -308,36 +321,19 @@ public class StationGraphGenerator {
                 }
             }
 
-            // 连接不同区域的枢纽站点
-            List<Station> hubs = new ArrayList<>(hubStations.values());
-            for (int i = 0; i < hubs.size(); i++) {
-                Station hub1 = hubs.get(i);
-
-                for (int j = i + 1; j < hubs.size(); j++) {
-                    Station hub2 = hubs.get(j);
-
-                    // 计算两枢纽站点间的距离
-                    double distance = calculateDistance(
-                            hub1.getLatitude(), hub1.getLongitude(),
-                            hub2.getLatitude(), hub2.getLongitude());
-
-                    // 枢纽站点间预计行驶时间（假设高速行驶，平均速度为80km/h）
-                    int travelTime = (int) Math.ceil(distance / 80 * 60); // 转换为分钟
-
-                    // 创建双向路线
-                    count += addRoute(pstmt, hub1, hub2, distance, travelTime);
-                    count += addRoute(pstmt, hub2, hub1, distance, travelTime);
-
-                    // 使用可配置的批处理大小
-                    if (count % BATCH_SIZE == 0) {
-                        pstmt.executeBatch();
-                        conn.commit();
-                        // 添加内存管理和性能监控
-                        if (count % (BATCH_SIZE * 10) == 0) {
-                            System.out.println("已处理 " + count + " 条记录...");
-                            System.gc(); // 建议垃圾收集（在实际生产环境中谨慎使用）
-                        }
-                    }
+            // 连接不同区域的枢纽站点 - 更新逻辑
+            Map<Long, List<Long>> regionNeighbors = buildRegionGeographicNeighbors(stations);
+            
+            // 只连接地理上相邻的区域
+            for (Long regionId : regionHubStations.keySet()) {
+                List<Long> neighbors = regionNeighbors.get(regionId);
+                if (neighbors == null) continue;
+                
+                for (Long neighborRegionId : neighbors) {
+                    // 连接相邻区域的枢纽站点
+                    connectHubStations(regionHubStations.get(regionId), 
+                                      regionHubStations.get(neighborRegionId),
+                                      pstmt, conn, addedRoutes);
                 }
             }
 
@@ -355,16 +351,24 @@ public class StationGraphGenerator {
     /**
      * 添加路线到批处理中
      */
-    private static int addRoute(PreparedStatement pstmt, Station from, Station to, double distance, int travelTime) throws SQLException {
-        double transportCost = distance * 0.8; // 假设运输成本为0.8元/公里
-
+    private static int addRoute(PreparedStatement pstmt, Station from, Station to, double distance, 
+                              int travelTime, Connection conn, Set<String> addedRoutes) throws SQLException {
+        // 使用内存中的Set检查
+        String routeKey = from.getId() + "-" + to.getId();
+        if (addedRoutes.contains(routeKey)) {
+            return 0;
+        }
+        
+        addedRoutes.add(routeKey);
+        
+        double transportCost = distance * 0.8;
         pstmt.setLong(1, from.getId());
         pstmt.setLong(2, to.getId());
         pstmt.setBigDecimal(3, new java.math.BigDecimal(distance));
         pstmt.setInt(4, travelTime);
         pstmt.setBigDecimal(5, new java.math.BigDecimal(transportCost));
         pstmt.addBatch();
-
+        
         return 1;
     }
 
@@ -519,8 +523,8 @@ public class StationGraphGenerator {
                     int travelTime = (int) Math.ceil(distance / 80 * 60);
 
                     // 创建双向连接
-                    addRoute(pstmt, fromStation, toStation, distance, travelTime);
-                    addRoute(pstmt, toStation, fromStation, distance, travelTime);
+                    addRoute(pstmt, fromStation, toStation, distance, travelTime, conn, new HashSet<>());
+                    addRoute(pstmt, toStation, fromStation, distance, travelTime, conn, new HashSet<>());
 
                     // 合并并查集中的两个分量
                     unionFind.union(fromIndex, toIndex);
@@ -767,5 +771,221 @@ public class StationGraphGenerator {
         }
 
         return false;
+    }
+
+    // Add this method to check if a route already exists
+    private static boolean routeExists(Connection conn, Long fromId, Long toId) throws SQLException {
+        try (PreparedStatement stmt = conn.prepareStatement(
+                "SELECT 1 FROM logistics.route WHERE from_station_id = ? AND to_station_id = ?")) {
+            stmt.setLong(1, fromId);
+            stmt.setLong(2, toId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }
+
+    /**
+     * 初始化区域枢纽站点
+     */
+    private static void initializeHubStations(Connection conn, List<Station> stations) throws SQLException {
+        System.out.println("开始标识区域枢纽站点...");
+        
+        // 按区域分组站点
+        Map<Long, List<Station>> regionStations = new HashMap<>();
+        for (Station station : stations) {
+            if (station.getRegionId() != null) {
+                regionStations.computeIfAbsent(station.getRegionId(), k -> new ArrayList<>()).add(station);
+            }
+        }
+        
+        // 处理每个区域
+        for (Map.Entry<Long, List<Station>> entry : regionStations.entrySet()) {
+            Long regionId = entry.getKey();
+            List<Station> stationList = entry.getValue();
+            
+            // 找出该区域的所有可能枢纽站点
+            List<Station> hubCandidates = new ArrayList<>();
+            for (Station station : stationList) {
+                // 条件1: 编码包含ZX
+                boolean codeCondition = station.getCode() != null && station.getCode().contains("ZX");
+                
+                // 条件2: 名称包含关键词
+                boolean nameCondition = station.getName() != null && 
+                    (station.getName().contains("中转") || 
+                     station.getName().contains("枢纽") || 
+                     station.getName().contains("物流中心") ||
+                     station.getName().contains("物流园"));
+                    
+                if (codeCondition || nameCondition) {
+                    hubCandidates.add(station);
+                }
+            }
+            
+            // 至少标记一个枢纽站点
+            if (hubCandidates.isEmpty() && !stationList.isEmpty()) {
+                // 如果没有找到合适的候选站点，选择该区域中最中心的站点
+                Station centralStation = findCentralStation(stationList);
+                if (centralStation != null) {
+                    hubCandidates.add(centralStation);
+                    System.out.println("区域 " + regionId + " 没有明确的枢纽站点，选择 " + centralStation.getName() + " 作为默认枢纽");
+                }
+            }
+            
+            // 更新站点状态为枢纽站点
+            for (Station hub : hubCandidates) {
+                try {
+                    String updateSql = "UPDATE station SET is_hub = 1 WHERE id = ?";
+                    PreparedStatement pstmt = conn.prepareStatement(updateSql);
+                    pstmt.setLong(1, hub.getId());
+                    pstmt.executeUpdate();
+                    pstmt.close();
+                    
+                    System.out.println("标记枢纽站点: " + hub.getName() + " (ID=" + hub.getId() + ", 区域=" + regionId + ")");
+                } catch (SQLException e) {
+                    System.err.println("标记枢纽站点时出错: " + e.getMessage());
+                }
+            }
+        }
+        
+        System.out.println("枢纽站点标识完成");
+    }
+
+    /**
+     * 找出一组站点中最中心的站点
+     */
+    private static Station findCentralStation(List<Station> stations) {
+        if (stations.isEmpty()) {
+            return null;
+        }
+        
+        // 计算区域中心点
+        double avgLat = 0, avgLon = 0;
+        int count = 0;
+        
+        for (Station station : stations) {
+            if (station.getLatitude() != null && station.getLongitude() != null) {
+                avgLat += station.getLatitude().doubleValue();
+                avgLon += station.getLongitude().doubleValue();
+                count++;
+            }
+        }
+        
+        if (count == 0) {
+            return stations.get(0);  // 如果没有坐标，返回第一个站点
+        }
+        
+        avgLat /= count;
+        avgLon /= count;
+        
+        // 找到距离中心点最近的站点
+        Station nearestStation = null;
+        double minDistance = Double.MAX_VALUE;
+        
+        for (Station station : stations) {
+            if (station.getLatitude() != null && station.getLongitude() != null) {
+                double lat = station.getLatitude().doubleValue();
+                double lon = station.getLongitude().doubleValue();
+                
+                double distance = Math.sqrt(Math.pow(lat - avgLat, 2) + Math.pow(lon - avgLon, 2));
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    nearestStation = station;
+                }
+            }
+        }
+        
+        return nearestStation;
+    }
+
+    /**
+     * 构建区域地理邻接关系
+     * 返回每个区域的相邻区域列表
+     */
+    private static Map<Long, List<Long>> buildRegionGeographicNeighbors(List<Station> stations) {
+        Map<Long, List<Long>> neighbors = new HashMap<>();
+        
+        // 获取所有区域及其中心坐标
+        Map<Long, double[]> regionCenters = calculateRegionCenters(stations);
+        
+        // 计算区域间的地理邻接关系
+        for (Long regionId1 : regionCenters.keySet()) {
+            neighbors.putIfAbsent(regionId1, new ArrayList<>());
+            double[] center1 = regionCenters.get(regionId1);
+            
+            for (Long regionId2 : regionCenters.keySet()) {
+                if (regionId1.equals(regionId2)) continue;
+                
+                double[] center2 = regionCenters.get(regionId2);
+                double distance = calculateDistance(center1[0], center1[1], center2[0], center2[1]);
+                
+                // 相邻距离阈值 (例如: 500公里以内视为相邻)
+                if (distance < 500) {
+                    neighbors.get(regionId1).add(regionId2);
+                }
+            }
+        }
+        
+        return neighbors;
+    }
+
+    /**
+     * 计算每个区域的中心坐标
+     */
+    private static Map<Long, double[]> calculateRegionCenters(List<Station> stations) {
+        Map<Long, double[]> regionCenters = new HashMap<>();
+        Map<Long, Integer> regionCounts = new HashMap<>();
+        
+        // 计算每个区域的所有站点坐标平均值
+        for (Station station : stations) {
+            if (station.getRegionId() != null && station.getLatitude() != null && station.getLongitude() != null) {
+                Long regionId = station.getRegionId();
+                double lat = station.getLatitude();
+                double lon = station.getLongitude();
+                
+                regionCenters.putIfAbsent(regionId, new double[]{0, 0});
+                regionCounts.putIfAbsent(regionId, 0);
+                
+                double[] center = regionCenters.get(regionId);
+                center[0] += lat;
+                center[1] += lon;
+                regionCounts.put(regionId, regionCounts.get(regionId) + 1);
+            }
+        }
+        
+        // 计算每个区域的平均坐标
+        for (Long regionId : regionCenters.keySet()) {
+            double[] center = regionCenters.get(regionId);
+            int count = regionCounts.get(regionId);
+            
+            if (count > 0) {
+                center[0] /= count;  // 平均纬度
+                center[1] /= count;  // 平均经度
+            }
+        }
+        
+        return regionCenters;
+    }
+
+    /**
+     * 连接两个区域的枢纽站点
+     */
+    private static void connectHubStations(List<Station> hubs1, List<Station> hubs2, 
+                                         PreparedStatement pstmt, Connection conn, 
+                                         Set<String> addedRoutes) throws SQLException {
+        for (Station hub1 : hubs1) {
+            for (Station hub2 : hubs2) {
+                double distance = calculateDistance(
+                    hub1.getLatitude(), hub1.getLongitude(),
+                    hub2.getLatitude(), hub2.getLongitude());
+                
+                // 枢纽站点间预计行驶时间（平均速度为80km/h）
+                int travelTime = (int) Math.ceil(distance / 80 * 60);
+                
+                // 创建双向路线
+                addRoute(pstmt, hub1, hub2, distance, travelTime, conn, addedRoutes);
+                addRoute(pstmt, hub2, hub1, distance, travelTime, conn, addedRoutes);
+            }
+        }
     }
 } 

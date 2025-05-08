@@ -34,7 +34,8 @@ public class RouteController {
     public BaseResponse<OptimalRouteVO> findOptimalRoute(
             @RequestParam @ApiParam("起点站点ID") Long fromStationId,
             @RequestParam @ApiParam("终点站点ID") Long toStationId,
-            @RequestParam(required = false, defaultValue = "false") @ApiParam("是否强制刷新路径") Boolean forceRefresh) {
+            @RequestParam(required = false, defaultValue = "false") @ApiParam("是否强制刷新路径") Boolean forceRefresh,
+            @RequestParam(required = false, defaultValue = "false") @ApiParam("是否强制区域中转") Boolean enforceTransfer) {
         
         if (fromStationId == null || toStationId == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "站点ID不能为空");
@@ -44,13 +45,19 @@ public class RouteController {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "起点和终点不能相同");
         }
         
-        log.info("路径查询请求: 从站点{}到站点{}, 强制刷新={}", fromStationId, toStationId, forceRefresh);
+        log.info("路径查询请求: 从站点{}到站点{}, 强制刷新={}, 强制区域中转={}", 
+                fromStationId, toStationId, forceRefresh, enforceTransfer);
         
         // 如果强制刷新，我们需要修改服务接口或实现二次查询
         OptimalRouteVO optimalRoute = null;
         
         try {
-            optimalRoute = routeService.calculateOptimalRoute(fromStationId, toStationId);
+            // 调用带有enforceTransfer参数的服务方法
+            optimalRoute = routeService.calculateOptimalRouteAdvanced(
+                    fromStationId, toStationId, 
+                    0.5, 0.3, 0.2, // 使用默认权重
+                    1.0, // 默认交通因子
+                    enforceTransfer); // 传递强制中转参数
             
             // 记录结果统计
             if (optimalRoute.getPathPoints() != null) {

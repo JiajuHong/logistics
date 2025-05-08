@@ -55,8 +55,8 @@ public class RouteServiceImpl extends ServiceImpl<RouteMapper, Route> implements
     // 缓存过期时间（小时）
     private static final int CACHE_EXPIRY_HOURS = 24;
     
-    @Override
-    public OptimalRouteVO calculateOptimalRoute(Long fromStationId, Long toStationId) {
+    public OptimalRouteVO calculateOptimalRoute(Long fromStationId, Long toStationId, 
+                                              boolean forceRefresh) {
         if (fromStationId == null || toStationId == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "起点和终点站点ID不能为空");
         }
@@ -65,22 +65,27 @@ public class RouteServiceImpl extends ServiceImpl<RouteMapper, Route> implements
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "起点和终点不能相同");
         }
         
-        // 先检查缓存 - 除非强制刷新，否则优先使用缓存
-        OptimalRouteCache cacheResult = checkCache(fromStationId, toStationId);
-        if (cacheResult != null && !isCacheExpired(cacheResult)) {
-            log.info("命中路径缓存: 从{}到{}", fromStationId, toStationId);
-            
-            // 更新命中次数
-            cacheResult.setHitCount(cacheResult.getHitCount() + 1);
-            optimalRouteCacheMapper.updateById(cacheResult);
-            
-            // 检查缓存中的路径是否合理(中转站点数量)
-            List<Long> pathNodes = JSON.parseArray(cacheResult.getPathNodes(), Long.class);
-            if (validatePathNodes(pathNodes, cacheResult.getTotalDistance())) {
-                return convertFromCache(cacheResult);
-            } else {
-                log.warn("缓存中的路径不合理，重新计算路径。从{}到{}", fromStationId, toStationId);
-                // 缓存路径不合理，需要重新计算
+        // 如果强制刷新或者缓存未命中，执行计算
+        if (forceRefresh) {
+            // 跳过缓存检查，直接计算
+        } else {
+            // 先检查缓存 - 除非强制刷新，否则优先使用缓存
+            OptimalRouteCache cacheResult = checkCache(fromStationId, toStationId);
+            if (cacheResult != null && !isCacheExpired(cacheResult)) {
+                log.info("命中路径缓存: 从{}到{}", fromStationId, toStationId);
+                
+                // 更新命中次数
+                cacheResult.setHitCount(cacheResult.getHitCount() + 1);
+                optimalRouteCacheMapper.updateById(cacheResult);
+                
+                // 检查缓存中的路径是否合理(中转站点数量)
+                List<Long> pathNodes = JSON.parseArray(cacheResult.getPathNodes(), Long.class);
+                if (validatePathNodes(pathNodes, cacheResult.getTotalDistance())) {
+                    return convertFromCache(cacheResult);
+                } else {
+                    log.warn("缓存中的路径不合理，重新计算路径。从{}到{}", fromStationId, toStationId);
+                    // 缓存路径不合理，需要重新计算
+                }
             }
         }
         
@@ -158,6 +163,12 @@ public class RouteServiceImpl extends ServiceImpl<RouteMapper, Route> implements
     }
     
     @Override
+    public OptimalRouteVO calculateOptimalRoute(Long fromStationId, Long toStationId) {
+        // Call the three-parameter version with a default value (false) for forceRefresh
+        return calculateOptimalRoute(fromStationId, toStationId, false);
+    }
+    
+    @Override
     public List<Route> getRouteList(Long fromStationId, Long toStationId) {
         if (fromStationId == null || toStationId == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "起点和终点站点ID不能为空");
@@ -211,6 +222,9 @@ public class RouteServiceImpl extends ServiceImpl<RouteMapper, Route> implements
             network.addDirectDistance(distance);
         }
         log.info("加载了{}条直线距离记录", distances.size());
+        
+        // 确保所有枢纽站点间有连接
+        network.ensureHubStationsConnectivity();
         
         return network;
     }
